@@ -38,6 +38,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyVar")
 	TObjectPtr<UStaticMeshComponent> MeshComp;
 	
+	// 총구
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyVar")
+	TObjectPtr<class UArrowComponent> FirePointComp;
+	
+	
 	// 입력
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyVar")
 	TObjectPtr<class UInputMappingContext> IMC_Player;
@@ -56,4 +61,14 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyVar")
 	float Speed = 500.f;
+	
+	// 마우스 왼쪽 버튼을 누르면 총알공장에서 총알을 생성해서 총구에 배치하고싶다.
+	UFUNCTION()
+	void OnMyFire(const struct FInputActionValue& value);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyVar")
+	TSubclassOf<class ABulletActor> BulletFactory;
+	
+	void MakeBullet();
+	
 };

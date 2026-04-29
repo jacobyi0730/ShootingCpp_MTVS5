@@ -3,10 +3,12 @@
 
 #include "PlayerPawn.h"
 
+#include "BulletActor.h"
 #include "Components/BoxComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Components/ArrowComponent.h"
 
 
 // Sets default values
@@ -23,6 +25,12 @@ APlayerPawn::APlayerPawn()
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	// 외형을 루트에 붙이고싶다.
 	MeshComp->SetupAttachment(RootComponent);
+	
+	// 총구를 생성해서
+	FirePointComp = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComp"));
+	// 루트에 붙이고싶다.
+	FirePointComp->SetupAttachment(RootComponent);
+	FirePointComp->SetRelativeLocationAndRotation(FVector(0, 0, 100.f), FRotator(90, 0, 0));
 }
 
 // Called when the game starts or when spawned
@@ -50,7 +58,8 @@ void APlayerPawn::Tick(float DeltaTime)
 	
 	// P = P0 + vt
 	FVector p0 = GetActorLocation();
-	FVector v = Direction * Speed;
+	//Direction.Normalize();
+	FVector v = Direction.GetSafeNormal() * Speed;
 	SetActorLocation(p0 + v * DeltaTime);
 	Direction = FVector::ZeroVector;
 }
@@ -64,6 +73,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	if (input)
 	{
 		input->BindAction(IA_PlayerMove, ETriggerEvent::Triggered, this, &APlayerPawn::OnMyMove);
+		
+		input->BindAction(IA_PlayerFire, ETriggerEvent::Started, this, &APlayerPawn::OnMyFire);
 	}
 }
 
@@ -72,5 +83,16 @@ void APlayerPawn::OnMyMove(const FInputActionValue& value)
 	FVector2D v = value.Get<FVector2D>();
 	Direction.Y = v.Y;
 	Direction.Z = v.X;
+}
+
+void APlayerPawn::OnMyFire(const struct FInputActionValue& value)
+{
+	MakeBullet();
+}
+
+void APlayerPawn::MakeBullet()
+{
+	FTransform t = FirePointComp->GetComponentTransform();
+	GetWorld()->SpawnActor<ABulletActor>(BulletFactory, t);
 }
 
