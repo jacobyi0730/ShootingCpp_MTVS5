@@ -31,6 +31,18 @@ APlayerPawn::APlayerPawn()
 	// 루트에 붙이고싶다.
 	FirePointComp->SetupAttachment(RootComponent);
 	FirePointComp->SetRelativeLocationAndRotation(FVector(0, 0, 100.f), FRotator(90, 0, 0));
+
+
+	// Mesh의 충돌설정을 끄고싶다.
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	// Box의  충돌설정을 하고싶다.
+	BoxComp->SetGenerateOverlapEvents(true);
+	BoxComp->SetCollisionProfileName(TEXT("Player"));
+	// BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	// BoxComp->SetCollisionObjectType(ECC_GameTraceChannel1);
+	// BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+	// BoxComp->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Overlap);
 }
 
 // Called when the game starts or when spawned

@@ -17,6 +17,14 @@ ABulletActor::ABulletActor()
 	// 외형을 만들어서 루트에 붙이고 싶다.
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetupAttachment(RootComponent);
+	
+	
+	// Mesh의 충돌설정을 끄고싶다.
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	// Box의  충돌설정을 하고싶다.
+	BoxComp->SetGenerateOverlapEvents(true);
+	BoxComp->SetCollisionProfileName(TEXT("Bullet"));
 
 }
 
