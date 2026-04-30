@@ -14,6 +14,8 @@ ABulletActor::ABulletActor()
 	
 	// 충돌체를 만들어서 루트로 하고 싶다.
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	BoxComp->SetBoxExtent(FVector(50.f));
+	
 	SetRootComponent(BoxComp);
 	// 외형을 만들어서 루트에 붙이고 싶다.
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
@@ -67,6 +69,7 @@ void ABulletActor::NotifyActorBeginOverlap(AActor* OtherActor)
 void ABulletActor::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// 니가 애너미라면 너죽고
+	//if (OtherActor->IsA<AEnemyActor>())
 	if (Cast<AEnemyActor>(OtherActor))
 	{
 		OtherActor->Destroy();

@@ -23,6 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	// 만약 주인공과 부딪히면 너죽고 나죽고 하고싶다.
+	UFUNCTION()
+	void OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	
 	// 충돌체
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MyVar")
 	TObjectPtr<class UBoxComponent> BoxComp;

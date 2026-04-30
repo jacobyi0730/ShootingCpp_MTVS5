@@ -3,6 +3,7 @@
 
 #include "EnemyActor.h"
 
+#include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -15,6 +16,8 @@ AEnemyActor::AEnemyActor()
 	
 	// 충돌체를 생성해서 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	BoxComp->SetBoxExtent(FVector(50.f));
+	
 	// 충돌체를 루트로 하고싶다.
 	SetRootComponent(BoxComp);
 	// 외형을 생성하고 싶다.
@@ -50,6 +53,9 @@ AEnemyActor::AEnemyActor()
 void AEnemyActor::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &AEnemyActor::OnMyCompBeginOverlap);
+	
 	// 태어날 때 방향을 정하고싶다.
 	int32 randValue = FMath::RandRange(0, 9);
 	
@@ -81,5 +87,16 @@ void AEnemyActor::Tick(float DeltaTime)
 	// 살아가면서 그 방향으로 계속 이동하고싶다.
 	// P = P0 + vt
 	SetActorLocation(GetActorLocation() + Direction * Speed * DeltaTime);
+}
+
+void AEnemyActor::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (Cast<APlayerPawn>(OtherActor))
+	{
+		OtherActor->Destroy();
+		// 나죽자
+		this->Destroy();
+	}
 }
 

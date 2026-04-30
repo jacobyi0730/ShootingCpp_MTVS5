@@ -19,6 +19,8 @@ APlayerPawn::APlayerPawn()
 	
 	// 충돌체를 생성해서 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	BoxComp->SetBoxExtent(FVector(50.f));
+	
 	// 충돌체를 루트로 하고싶다.
 	SetRootComponent(BoxComp);
 	// 외형을 생성하고 싶다.
